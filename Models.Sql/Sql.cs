@@ -13,23 +13,20 @@ namespace MyAirport.Pim.Models
     {
         private string strCnx = ConfigurationManager.ConnectionStrings["MyAirport.Pim.Settings.DbConnect"].ConnectionString;
 
-        private string commandGetBagageIata = "SELECT b.ID_BAGAGE, b.CODE_IATA, b.COMPAGNIE, b.LIGNE, b.DATE_CREATION, b.ESCALE, b.CLASSE," +
-            "b.EN_CONTINUATION, cast(iif(bp.ID_PARTICULARITE is null, 0, 1) as bit) as 'RUSH', cast(iif(b.EN_CONTINUATION like 'N', 0, 1) as bit ) as 'CONT', " +
-            "cast(iif(b.PRIORITAIRE like '0', 0, 1) as bit) as 'PRIO' " +
-            "FROM BAGAGE b left outer join BAGAGE_A_POUR_PARTICULARITE bp on (bp.ID_BAGAGE > 0 and bp.ID_PARTICULARITE = 15) where b.code_iata = @code_iata";
+        private string commandGetBagageIata = "SELECT b.ID_BAGAGE, b.CODE_IATA, b.COMPAGNIE, b.ligne,  b.DATE_CREATION, b.ESCALE, b.CLASSE," +
+            "CAST(iif(bp.ID_PARTICULARITE is null, 0, 1) as bit) as 'RUSH'," + "CAST(iif(b.EN_CONTINUATION like 'N', 0,1) as bit) as 'CONT'," +
+            "CAST(iif(b.PRIORITAIRE like '0', 0,1) as bit) as 'PRIO'" + "FROM BAGAGE b left outer join BAGAGE_A_POUR_PARTICULARITE bp on(bp.ID_BAGAGE > 0 and bp.ID_PARTICULARITE = 15) where b.CODE_IATA like '%[0-9+]@code_iata[0-9+]%';";
 
-        private string commandGetBagageId = "SELECT b.ID_BAGAGE, b.CODE_IATA, b.COMPAGNIE, b.LIGNE, b.DATE_CREATION, b.ESCALE, b.CLASSE," +
-            "b EN_CONTINUATION, cast(iif(bp.ID_PARTICULARITE is null, 0, 1) as bit) as 'RUSH', cast(iif(b.EN_CONTINUATION like 'N', 0, 1) as bit ) as 'CONT', " +
-            "cast(iif(b.PRIORITAIRE like '0', 0, 1) as bit) as 'PRIO' " +
-            "FROM BAGAGE b left outer join BAGAGE_A_POUR_PARTICULARITE bp on (bp.ID_BAGAGE > 0 and bp.ID_PARTICULARITE = 15) where b.ID_BAGAGE = @id";
+        private string commandGetBagageId = "SELECT b.ID_BAGAGE, b.CODE_IATA, b.COMPAGNIE, b.ligne,  b.DATE_CREATION, b.ESCALE, b.CLASSE," +
+            "CAST(iif(bp.ID_PARTICULARITE is null, 0, 1) as bit) as 'RUSH'," + "CAST(iif(b.EN_CONTINUATION like 'N', 0,1) as bit) as 'CONT'," +
+            "CAST(iif(b.PRIORITAIRE like '0', 0,1) as bit) as 'PRIO'" + "FROM BAGAGE b left outer join BAGAGE_A_POUR_PARTICULARITE bp on(bp.ID_BAGAGE > 0 and bp.ID_PARTICULARITE = 15) where b.CODE_IATA like '%[0-9+]@id[0-9+]%';";
 
         private List<BagageDefinition> listBagage;
         public override BagageDefinition GetBagage(int idBagage)
         {
             BagageDefinition bagRes = null;
-            using (SqlConnection cnx = new SqlConnection(strCnx))
-            {
-                SqlCommand cmd = new SqlCommand(this.commandGetBagageId, cnx);
+            using (SqlConnection cnx = new SqlConnection(strCnx)) { 
+                    SqlCommand cmd = new SqlCommand(this.commandGetBagageId, cnx);
                 cmd.Parameters.AddWithValue("@id", idBagage);
                 cnx.Open();
                 SqlDataReader sdr = cmd.ExecuteReader();
@@ -39,8 +36,13 @@ namespace MyAirport.Pim.Models
                     {
                         IdBagage = sdr.GetInt32(sdr.GetOrdinal("ID_BAGAGE")),
                         CodeIata = sdr.GetString(sdr.GetOrdinal("CODE_IATA")),
-                        EnContinuation = sdr.GetBoolean(sdr.GetOrdinal("CONTINUATION")),
-                        Compagnie = sdr.GetString(sdr.GetOrdinal("COMPAGNIE"))
+                        EnContinuation = sdr.GetBoolean(sdr.GetOrdinal("CONT")),
+                        Compagnie = sdr.GetString(sdr.GetOrdinal("COMPAGNIE")),
+                        Rush = sdr.GetBoolean(sdr.GetOrdinal("RUSH")),
+                        Prioritaire = sdr.GetBoolean(sdr.GetOrdinal("PRIO")),
+                        DateVol = sdr.GetDateTime(sdr.GetOrdinal("DATE_CREATION")),
+                        Ligne = sdr.GetString(sdr.GetOrdinal("LIGNE")),
+                        Jour_Exploitation = sdr.GetInt32(sdr.GetOrdinal("JOUR_EXPLOITATION"))
                     };
                 }
             }
@@ -62,8 +64,13 @@ namespace MyAirport.Pim.Models
                     {
                         IdBagage = sdr.GetInt32(sdr.GetOrdinal("ID_BAGAGE")),
                         CodeIata = sdr.GetString(sdr.GetOrdinal("CODE_IATA")),
-                        EnContinuation = sdr.GetBoolean(sdr.GetOrdinal("CONTINUATION")),
-                        Compagnie = sdr.GetString(sdr.GetOrdinal("COMPAGNIE"))
+                        EnContinuation = sdr.GetBoolean(sdr.GetOrdinal("CONT")),
+                        Compagnie = sdr.GetString(sdr.GetOrdinal("COMPAGNIE")),
+                        Rush =  sdr.GetBoolean(sdr.GetOrdinal("RUSH")),
+                        Prioritaire = sdr.GetBoolean(sdr.GetOrdinal("PRIO")),
+                        DateVol = sdr.GetDateTime(sdr.GetOrdinal("DATE_CREATION")),
+                        Ligne = sdr.GetString(sdr.GetOrdinal("LIGNE")),
+                        Jour_Exploitation = sdr.GetInt32(sdr.GetOrdinal("JOUR_EXPLOITATION"))
                     });
                 }
             }
