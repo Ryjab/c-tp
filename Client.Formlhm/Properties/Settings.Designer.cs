@@ -26,7 +26,8 @@ namespace Client.Formlhm.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=MSI\\SQLEXPRESS;Initial Catalog=MyAirport;Integrated Security=True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=MENTALI\\SQLEXPRESS;Initial Catalog=MyAirport;Integrated Security=True" +
+            "")]
         public string DbConnect {
             get {
                 return ((string)(this["DbConnect"]));
