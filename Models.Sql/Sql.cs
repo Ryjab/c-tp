@@ -15,11 +15,13 @@ namespace MyAirport.Pim.Models
 
         private string commandGetBagageIata = "SELECT b.ID_BAGAGE, b.CODE_IATA, b.COMPAGNIE, b.ligne,  b.DATE_CREATION, b.ESCALE, b.CLASSE," +
             "CAST(iif(bp.ID_PARTICULARITE is null, 0, 1) as bit) as 'RUSH'," + "CAST(iif(b.EN_CONTINUATION like 'N', 0,1) as bit) as 'CONT'," +
-            "CAST(iif(b.PRIORITAIRE like '0', 0,1) as bit) as 'PRIO'" + "FROM BAGAGE b left outer join BAGAGE_A_POUR_PARTICULARITE bp on(bp.ID_BAGAGE > 0 and bp.ID_PARTICULARITE = 15) where b.CODE_IATA like '%[0-9+]@code_iata[0-9+]%';";
+            "CAST(iif(b.PRIORITAIRE like '0', 0,1) as bit) as 'PRIO'" + "FROM BAGAGE b left outer join BAGAGE_A_POUR_PARTICULARITE bp on(bp.ID_BAGAGE > 0 and bp.ID_PARTICULARITE = 15) where b.CODE_IATA like '%@code_iata%';";
 
         private string commandGetBagageId = "SELECT b.ID_BAGAGE, b.CODE_IATA, b.COMPAGNIE, b.ligne,  b.DATE_CREATION, b.ESCALE, b.CLASSE," +
             "CAST(iif(bp.ID_PARTICULARITE is null, 0, 1) as bit) as 'RUSH'," + "CAST(iif(b.EN_CONTINUATION like 'N', 0,1) as bit) as 'CONT'," +
-            "CAST(iif(b.PRIORITAIRE like '0', 0,1) as bit) as 'PRIO'" + "FROM BAGAGE b left outer join BAGAGE_A_POUR_PARTICULARITE bp on(bp.ID_BAGAGE > 0 and bp.ID_PARTICULARITE = 15) where b.CODE_IATA like '%[0-9+]@id[0-9+]%';";
+            "CAST(iif(b.PRIORITAIRE like '0', 0,1) as bit) as 'PRIO'" + "FROM BAGAGE b left outer join BAGAGE_A_POUR_PARTICULARITE bp on(bp.ID_BAGAGE > 0 and bp.ID_PARTICULARITE = 15) where b.ID_BAGAGE = '@id';";
+
+
 
         private List<BagageDefinition> listBagage;
         public override BagageDefinition GetBagage(int idBagage)
